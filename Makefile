@@ -26,8 +26,8 @@ $(OBJ_DIR)/%.o: %.cc
 	$(CC) -c $(CXXFLAGS) $< -o $@
 
 $(DEPEND): $(SRCS) $(HDRS)
-	@echo $(OBJS)
 	$(CC) -M $(CXXFLAGS) $(SRCS) > $@ 
+	sed -i $@ -e 's/\(.*\.o\)/obj\/\1/'
 
 clean:
 	rm -rf $(OBJ_DIR)

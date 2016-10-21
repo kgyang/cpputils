@@ -27,6 +27,7 @@ class Debug
         };
         int help(std::ostringstream &oss, std::vector<std::string> &argv);
         int log(std::ostringstream &oss, std::vector<std::string> &argv);
+        int trace(std::ostringstream &oss, std::vector<std::string> &argv);
 
         std::map<std::string, CmdItem> cmds_;
 };

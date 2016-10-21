@@ -1,5 +1,7 @@
+#include <map>
 #include "Log.hh"
 #include "Debug.hh"
+#include "Trace.hh"
 
 namespace CPPUTILS
 {
@@ -13,8 +15,11 @@ Debug::Debug()
         "show [sys|app]\n"
         "clr <sys|app>\n"
         "max <sys|app> <val>");
-}
 
+    cmds_["trace"] = CmdItem(&Debug::trace,
+        "show\n"
+        "set <none|error|warming|debug|detail>");
+}
 
 int Debug::runCmd(std::ostringstream &oss, std::vector<std::string> &argv)
 {
@@ -76,7 +81,6 @@ int Debug::help(std::ostringstream &oss, std::vector<std::string> &argv)
   return 0;
 }
 
-
 int Debug::log(std::ostringstream &oss, std::vector<std::string> &argv)
 {
     if (argv.size() < 1) return -1;
@@ -124,6 +128,45 @@ int Debug::log(std::ostringstream &oss, std::vector<std::string> &argv)
         if (sub != "sys" && sub != "app") return -1;
         Log& log = (sub == "sys") ? Log::sysLog : Log::appLog;
         log.setMaxLogNumber(atoi(argv[1].c_str()));
+    }
+    else
+    {
+        return -1;
+    }
+    return 0;
+}
+
+int Debug::trace(std::ostringstream &oss, std::vector<std::string> &argv)
+{
+    std::map<TraceLevel, std::string> levels;
+    levels[TRACE_LEVEL_NONE] = "none";
+    levels[TRACE_LEVEL_ERROR] = "error";
+    levels[TRACE_LEVEL_WARNING] = "warning";
+    levels[TRACE_LEVEL_DEBUG] = "debug";
+    levels[TRACE_LEVEL_DETAIL] = "detail";
+
+    if (argv.size() < 1) return -1;
+
+    std::string cmd = argv[0];
+    argv.erase(argv.begin());
+
+    if (cmd == "show")
+    {
+        oss << "Trace level: " << levels[trace_getLevel()]<< std::endl;
+    }
+    else if (cmd == "set")
+    {
+        if (argv.size() != 1) return -1;
+        for (std::map<TraceLevel, std::string>::iterator iter = levels.begin();
+             iter != levels.end(); ++iter)
+        {
+            if (iter->second == argv[0])
+            {
+                trace_setLevel(iter->first);
+                return 0;
+            }
+        }
+        return -1;
     }
     else
     {
