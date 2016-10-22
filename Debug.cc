@@ -19,7 +19,7 @@ Debug::Debug()
 
     cmds_["trace"] = CmdItem(&Debug::trace,
         "show\n"
-        "set <none|error|warming|debug|detail>");
+        "set <none|error|warning|debug|detail>");
 }
 
 int Debug::runCmd(std::ostringstream &oss, std::vector<std::string> &argv)
