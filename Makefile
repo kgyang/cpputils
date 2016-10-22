@@ -15,16 +15,20 @@ TARGET = obj/util
 DEPEND = obj/depend.d
 
 CXXFLAGS = -g
-LDFLAGS = -lstdc++ -lrt -lncurses -lhistory -lreadline
+
+#LDFLAGS must be placed before object files, otherwise undefined reference occurs during ld
+#-lreadline must be placed before -lhistory, otherwise segmentation fault occurs when pressing up arrow to search history command
+LDFLAGS = -lstdc++ -lncurses -lreadline -lhistory 
 
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(CC) $(LDFLAGS) -o $@ $^
+	$(CC) $^ $(LDFLAGS) -o $@
 
 $(OBJ_DIR)/%.o: %.cc
 	$(CC) -c $(CXXFLAGS) $< -o $@
 
+# sed is used to add obj_dir prefix to target in depend.d
 $(DEPEND): $(SRCS) $(HDRS)
 	$(CC) -M $(CXXFLAGS) $(SRCS) > $@ 
 	sed -i $@ -e 's/\(.*\.o\)/obj\/\1/'
@@ -33,4 +37,3 @@ clean:
 	rm -rf $(OBJ_DIR)
 
 -include $(DEPEND)
-

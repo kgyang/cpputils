@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <termios.h>
@@ -20,11 +21,13 @@ int main(int argc, char* argv[])
 
     CPPUTILS::Debug debug;
 
+    using_history();
+
     while (1)
     {
-        std::string prompt = scriptmode ? "" : "-> ";
+        std::string prompt = "-> ";
 
-        char *input = readline(prompt.c_str());
+        char *input = readline(scriptmode ? NULL : prompt.c_str());
         if (!input) break;
 
         if (*input && !scriptmode) add_history(input);

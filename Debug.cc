@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <map>
 #include "Log.hh"
 #include "Debug.hh"
