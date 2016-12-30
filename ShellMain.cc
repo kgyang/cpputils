@@ -13,6 +13,21 @@
 
 #include "UiSecAclDbRecordCacheApiStub.hh"
 
+struct Foo
+{
+  int a;
+  int b;
+
+  Foo() { a = 0; b = 0; }
+  Foo(int a, int b) { this->a = a; this->b = b; }
+
+  bool operator < (Foo const &o) const
+  {
+    return (a < o.a);
+  }
+
+};
+
 int main(int argc, char* argv[])
 {
     (void)argc;
@@ -23,13 +38,40 @@ int main(int argc, char* argv[])
 
     CPPUTILS::Debug debug;
 
-    Db::RecCacheApi_t<int> dbApi;
+    Db::RecCacheApi_t<Foo> dbApi;
 
-    int d1 = 1, d2 = 3;
-    dbApi.add(d1);
-    dbApi.add(d2);
-    dbApi.getNext(d1);
-    printf("d1 next is %d\n", d1);
+    Foo f1(1,10);
+    Foo f2(2,20);
+    Foo f3(3,30);
+    Foo f4(0,0);
+    dbApi.add(f1);
+    dbApi.add(f2);
+    dbApi.add(f3);
+    dbApi.getNext(f4);
+    printf("next is %d\n", f4.a);
+    dbApi.getNext(f4);
+    printf("next is %d\n", f4.a);
+    dbApi.getNext(f4);
+    printf("next is %d\n", f4.a);
+    dbApi.getNext(f4);
+    printf("next is %d\n", f4.a);
+    dbApi.modify(Foo(1,11));
+    Foo f5(1,0);
+    dbApi.get(f5);
+    printf("f5 val is %d\n", f5.b);
+    dbApi.remove(f5);
+    dbApi.getNext(f5);
+    printf("f5 next is %d\n", f5.a);
+    std::list<Foo> all;
+    dbApi.getAll(all);
+    for (std::list<Foo>::iterator it = all.begin(); it != all.end(); ++it)
+    {
+        printf("all %d\n", it->a);
+    }
+    for (Db::RecCacheApi_t<Foo>::recCacheIter_t it = dbApi.begin(); it != dbApi.end(); ++it)
+    {
+        printf("iter %d\n", it->a);
+    }
     return 0;
 
     using_history();

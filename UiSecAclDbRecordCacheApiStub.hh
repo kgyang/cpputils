@@ -101,14 +101,15 @@ public:
       return false;
     }
 
-    T& tPrev = *it;
+    T tPrev = *it;
 
     // Call validation method
     if (!validateModify(tPrev, t, mask)) {
      return false;
     }
 
-    tPrev = t;
+    m_Cache.erase(tPrev);
+    m_Cache.insert(t);
 
     // Call post method
     if (!postModify(tPrev, t, mask)) {
@@ -229,7 +230,7 @@ public:
 
   // Initialization
   RecCacheApi_t() { }
-  //RecCacheApi_t(ERecordType recType, Ec::id_type ecid) { }
+  RecCacheApi_t(ERecordType recType, Ec::id_type ecid) { }
   virtual ~RecCacheApi_t() { }
 
 };
