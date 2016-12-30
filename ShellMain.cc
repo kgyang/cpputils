@@ -11,6 +11,8 @@
 
 #include "Debug.hh"
 
+#include "UiSecAclDbRecordCacheApiStub.hh"
+
 int main(int argc, char* argv[])
 {
     (void)argc;
@@ -20,6 +22,15 @@ int main(int argc, char* argv[])
     bool scriptmode = (tcgetattr(0, &term) < 0);
 
     CPPUTILS::Debug debug;
+
+    Db::RecCacheApi_t<int> dbApi;
+
+    int d1 = 1, d2 = 3;
+    dbApi.add(d1);
+    dbApi.add(d2);
+    dbApi.getNext(d1);
+    printf("d1 next is %d\n", d1);
+    return 0;
 
     using_history();
 

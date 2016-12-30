@@ -15,6 +15,12 @@
 
 #include <set>
 #include <list>
+#include <DbRecTypes.hh>
+#include <EC/Id.h>
+
+#ifndef U32
+typedef unsigned int U32;
+#endif
 
 //*****************************************************************************
 //
@@ -48,12 +54,10 @@ protected:
   virtual bool postRemove( const T& t)       { return true; }
 
   //Initialize the Cache
-  #if 0
   void initCache( ERecordType recType, Ec::id_type ecid, bool dispatch = true )
   {
     return;
   }
-  #endif
 
 public:
   // Methods for modifying Cache and DB
@@ -69,7 +73,7 @@ public:
      return false;
     }
 
-    if( !m_Cache.insert(t)) {
+    if( !m_Cache.insert(t).second) {
       return false;
     }
 
