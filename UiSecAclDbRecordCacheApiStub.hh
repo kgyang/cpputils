@@ -16,7 +16,7 @@
 #include <set>
 #include <list>
 #include <DbRecTypes.hh>
-#include <EC/Id.h>
+#include <EC/Id.hh>
 
 #ifndef U32
 typedef unsigned int U32;
